@@ -2,6 +2,7 @@ package com.zhang.netty.nettywebsocket.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoop;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -19,8 +20,8 @@ public class WSServer {
         //创建两个线程组
         // 1.一个用于进行网络连接 接收的
         // 2. 另一个用于 我们实际处理 (网络通信的读写)
-        NioEventLoopGroup bossGroup = new NioEventLoopGroup();
-        NioEventLoopGroup workGroup = new NioEventLoopGroup();
+        EventLoopGroup bossGroup = new NioEventLoopGroup();
+        EventLoopGroup workGroup = new NioEventLoopGroup();
 
         try{
 
