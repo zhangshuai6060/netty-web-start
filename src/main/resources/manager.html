@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>后端</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div> 发送消息:</div>
+
+<input type="text" id="message"/>
+
+<input type="button" value="点我发送消息" onclick="sendButtonMessage()"/>
+
+<div> 接收客户端消息:</div>
+
+<div id="receiveMsg" style="background-color: azure;"></div>
+
+<script>
+    let socket;
+
+    function init() {
+        if (window.WebSocket) {
+            var socketUrl = "ws://localhost:8888/ws";
+            console.log(socketUrl);
+            socket = new WebSocket(socketUrl);
+            socket.onopen = function () {
+                //当连接打开的时候 应该获取到 用户的信息
+                var json = {
+                    "action": 2,
+                    "chatMsg": {
+                        "userId": 2,
+                        "receiverId": 1,
+                        "msg": '连接消息没有什么用处',
+                        "msgId": 1
+                    },
+                    "extand": "222"
+                };
+                sendMessage(json);
+                console.log("连接打开了");
+            },
+                socket.onmessage = function (e) {
+                    console.log("接受到消息:" + e.data);
+                    var messgae = document.getElementById("receiveMsg");
+                    var html = messgae.innerHTML;
+                    //当我拿到这个消息的时候 存储到 浏览器的log里面
+                    // localStorage.setItem("name",e.data);
+                    messgae.innerHTML = html + "<br/>" + e.data;
+                    //当我拿到这个
+
+                },
+                socket.onerror = function () {
+                    console.log("连接发生错误了");
+                },
+                socket.onclose = function () {
+                    console.log("连接要关闭了");
+                }
+        } else {
+            alert("浏览器不支持websocket");
+        }
+
+    }
+
+
+    function sendMessage(msg) {
+        socket.send(JSON.stringify(msg));
+    }
+
+    /**
+     * 当点击按钮时候 触发发送消息的操作
+     * @return {[type]} [description]
+     */
+    function sendButtonMessage() {
+        var mes = $("#message").val();
+        var json = {
+            "action": 4,
+            "chatMsg": {
+                "userId": 2,
+                "receiverId": 1,
+                "msg": mes,
+                "msgId": 1
+            },
+            "extand": "222"
+        };
+        sendMessage(json);
+    }
+
+    $(function () {
+        init();
+    })
+</script>
+</body>
+</html>
